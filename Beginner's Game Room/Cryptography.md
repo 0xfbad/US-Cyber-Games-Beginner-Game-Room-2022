@@ -1,4 +1,13 @@
 # Cryptography
+[Number Based Decoding - 8l4ckh4t](#number-based-decoding---8l4ckh4t---1pts)
+[n1nj4](#n1nj4---2pts)
+[Key - r00t](#key---r00t---3pts)
+[Bad Event - USA](#bad-event---usa---4pts)
+[Going Home](#going-home---4pts)
+[Message - m4st3r](#message---m4st3r---5pts)
+[Decoding Flags - m4dh4t](#decoding-flags---m4dh4t---6pts)
+[Bad Event - China](#bad-event---china---8pts)
+
 
 ## Number Based Decoding - 8l4ckh4t - 1pts
 > 63 68 61 72 67 65 20 2E 30 33 20 62 69 74 63 6F 69 6E 2066 6F 72 20 64 65 63 72 79 70 74 20 6B 65 79 73
