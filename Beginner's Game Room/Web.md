@@ -168,14 +168,13 @@ Lets build our curl command:
 curl -X POST 'https://cerealize.challenges.virginiacyberrange.net/cerealize.php' -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";s:4:\"blah\";s:13:\"cereal_flavor\";s:4:\"blah\";s:12:\"cereal_brand\";s:4:\"blah\";}"'
 ```
 
-```
-curl	: cmd
--X		: type of request
-POST	: specify type
-'https..: website to send request to
--F		: specify the next input is form-data (since $_POST doesn't see request body data)
-'cerea..: the form data under the "cereal" parameter
-```
+- `curl`: cmd
+- `-X`: type of request
+- `POST`: specify type
+- `'https..`: website to send request to
+- `-F`: specify the next input is form-data (since $_POST doesn't see request body data)
+- `'cerea..`: the form data under the "cereal" parameter
+
 
 We can verify this works if we run it:
 ```
