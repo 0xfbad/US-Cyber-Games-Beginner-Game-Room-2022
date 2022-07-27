@@ -59,7 +59,7 @@ Answer:
 FLAG-LAKERS2022
 ```
 
-## Radio Message - 5pts
+## Radio Message!!! - 5pts
 > One friend from overseas wants to visit me in my hometown in southeast Tennessee. I gave him my contact number. During his visit, he sent me a secret message using radio imaging. But someone intercepted the message.
 > 
 > Submit the flag in the following format: ucgCTF{word_word_word}<br>
@@ -136,7 +136,7 @@ FLAG-2022-HW
 NO SOLUTION YET
 ```
 
-## No Collision here - 12pts
+## No Collision here. - 12pts
 > There is an image of a Windows system provided to you. Find the file on an extension with this MD5 hash: 4a729045229e0c1dc0a471c589b3ee7d.<br>
 > Created by Jesse V.
 > 
