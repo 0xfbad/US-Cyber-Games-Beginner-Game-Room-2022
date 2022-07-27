@@ -8,7 +8,6 @@
 [Decoding Flags - m4dh4t](#decoding-flags---m4dh4t---6pts)<br>
 [Bad Event - China](#bad-event---china---8pts)<br>
 
-
 ## Number Based Decoding - 8l4ckh4t - 1pts
 > 63 68 61 72 67 65 20 2E 30 33 20 62 69 74 63 6F 69 6E 2066 6F 72 20 64 65 63 72 79 70 74 20 6B 65 79 73
 > 
