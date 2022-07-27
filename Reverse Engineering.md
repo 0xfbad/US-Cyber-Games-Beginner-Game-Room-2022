@@ -1,10 +1,10 @@
 # Reverse Engineering
-[You can totally do this, don't get a virus!]()<br>
-[System Check]()<br>
-[Say my name, say my name]()<br>
+[You can totally do this, don't get a virus!](#you-can-totally-do-this-dont-get-a-virus---2pts)<br>
+[Say my name, say my name](#say-my-name-say-my-name---4pts)<br>
+[System Check](#system-check---10pts)<br>
 *(some challenges missing)*
 
-## You can totally do this, don't get a virus - 2pts
+## You can totally do this, don't get a virus! - 2pts
 > What is the name of the file that belongs to this SHA256 hash?
 > 2ba412368d12490756b42153ca8564b761c2b451901f2bcf0778c77a8c00c229
 > 
